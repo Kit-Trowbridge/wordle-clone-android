@@ -33,20 +33,31 @@ class MainActivity : ComponentActivity() {
 }
 
 data class WordGameState(
-    val word: List<String>, // maybe we want this to be string? or have 2 variables?
+    val numOfGuesses: Int = 4,
+    val word: String, // can index string, no need for list
     val userGuess: String = "",
-    val guessNum: Int = 0,
-    val guessedCorrectWord: Boolean = false
+    val userGuessNum: Int = 0,
+    val guessedCorrectWord: Boolean = false,
+    val wonGame: Boolean = false,
+    val lostGame: Boolean = false
 )
 
 class WordGameViewModel(): ViewModel() {
     private val _uiState = MutableStateFlow(WordGameState(
-        word = listOf("f", "a", "r", "m")
+        word = "farm"
     ))
     val uiState: StateFlow<WordGameState> = _uiState
-
     fun onGuess() {
-
+        _uiState.value = _uiState.value.copy(userGuessNum = _uiState.value.userGuessNum + 1)
+        _uiState.value = _uiState.value.copy(guessedCorrectWord = _uiState.value.userGuess == _uiState.value.word)
+        if (_uiState.value.guessedCorrectWord) {
+            _uiState.value = _uiState.value.copy(wonGame = true)
+            return
+        }
+        if (_uiState.value.userGuessNum == _uiState.value.numOfGuesses) {
+            // if they used up all their guesses and didn't succeed, they lost game
+            _uiState.value = _uiState.value.copy(lostGame = true)
+        }
     }
 }
 
