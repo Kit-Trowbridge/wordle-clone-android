@@ -32,13 +32,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+sealed class GameStatus {
+    object Playing : GameStatus()
+    object Won : GameStatus()
+    object Lost : GameStatus()
+}
+
 data class WordGameState(
     val numOfGuesses: Int = 4,
     val word: String, // can index string, no need for list
     val userGuess: String = "",
     val userGuessNum: Int = 0,
-    val wonGame: Boolean = false,
-    val lostGame: Boolean = false
+    val gameStatus: GameStatus = GameStatus.Playing
 )
 
 class WordGameViewModel(): ViewModel() {
@@ -49,13 +54,13 @@ class WordGameViewModel(): ViewModel() {
     fun onGuess() {
         _uiState.value = _uiState.value.copy(
             userGuessNum = _uiState.value.userGuessNum + 1,
-            wonGame = _uiState.value.userGuess == _uiState.value.word
+            gameStatus = if (_uiState.value.userGuess == _uiState.value.word) GameStatus.Won else GameStatus.Playing
         )
-        if (_uiState.value.wonGame) return
 
-        if (_uiState.value.userGuessNum == _uiState.value.numOfGuesses) {
-            // if they used up all their guesses and didn't succeed, they lost game
-            _uiState.value = _uiState.value.copy(lostGame = true)
+        if (_uiState.value.gameStatus == GameStatus.Won) return
+
+        if (_uiState.value.userGuessNum == _uiState.value.numOfGuesses) { // if they used up all their guesses and didn't succeed
+            _uiState.value = _uiState.value.copy(gameStatus = GameStatus.Lost)
         }
     }
 }
