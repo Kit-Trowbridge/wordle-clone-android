@@ -48,12 +48,12 @@ class WordGameViewModel(): ViewModel() {
     ))
     val uiState: StateFlow<WordGameState> = _uiState
     fun onGuess() {
-        _uiState.value = _uiState.value.copy(userGuessNum = _uiState.value.userGuessNum + 1)
-        _uiState.value = _uiState.value.copy(guessedCorrectWord = _uiState.value.userGuess == _uiState.value.word)
-        if (_uiState.value.guessedCorrectWord) {
-            _uiState.value = _uiState.value.copy(wonGame = true)
-            return
-        }
+        _uiState.value = _uiState.value.copy(
+            userGuessNum = _uiState.value.userGuessNum + 1,
+            guessedCorrectWord = _uiState.value.userGuess == _uiState.value.word,
+            wonGame = _uiState.value.guessedCorrectWord
+        )
+
         if (_uiState.value.userGuessNum == _uiState.value.numOfGuesses) {
             // if they used up all their guesses and didn't succeed, they lost game
             _uiState.value = _uiState.value.copy(lostGame = true)
