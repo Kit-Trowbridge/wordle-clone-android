@@ -11,7 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
 import com.example.wordguessinggame.ui.theme.WordGuessingGameTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +32,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+data class WordGameState(
+    val word: List<String>, // maybe we want this to be string? or have 2 variables?
+    val userGuess: String = "",
+    val guessNum: Int = 0,
+    val guessedCorrectWord: Boolean = false
+)
+
+class WordGameViewModel(): ViewModel() {
+    private val _uiState = MutableStateFlow(WordGameState(
+        word = listOf("f", "a", "r", "m")
+    ))
+    val uiState: StateFlow<WordGameState> = _uiState
+
+    fun onGuess() {
+
+    }
+}
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
