@@ -37,7 +37,6 @@ data class WordGameState(
     val word: String, // can index string, no need for list
     val userGuess: String = "",
     val userGuessNum: Int = 0,
-    val guessedCorrectWord: Boolean = false,
     val wonGame: Boolean = false,
     val lostGame: Boolean = false
 )
@@ -50,9 +49,9 @@ class WordGameViewModel(): ViewModel() {
     fun onGuess() {
         _uiState.value = _uiState.value.copy(
             userGuessNum = _uiState.value.userGuessNum + 1,
-            guessedCorrectWord = _uiState.value.userGuess == _uiState.value.word,
-            wonGame = _uiState.value.guessedCorrectWord
+            wonGame = _uiState.value.userGuess == _uiState.value.word
         )
+        if (_uiState.value.wonGame) return
 
         if (_uiState.value.userGuessNum == _uiState.value.numOfGuesses) {
             // if they used up all their guesses and didn't succeed, they lost game
